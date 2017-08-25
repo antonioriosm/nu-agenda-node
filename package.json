@@ -1,0 +1,26 @@
+{
+  "name": "nu-agenda-node",
+  "version": "1.0.0",
+  "description": "evaluación final para módulo interactuando con base de datos del curso de bigdata, completar un login y actualizar agenda de acuerdo a especificaciones o requerimientos dados",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/antonioriosm/nu-agenda-node.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/antonioriosm/nu-agenda-node/issues"
+  },
+  "homepage": "https://github.com/antonioriosm/nu-agenda-node#readme",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.4",
+    "mongodb": "^2.2.31",
+    "morgan": "^1.8.2"
+  }
+}
