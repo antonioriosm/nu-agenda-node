@@ -1,7 +1,7 @@
 'use strict';
 
 let MongoClient = require('mongodb').MongoClient,
-    passwordHash = require('password-hash');
+    bcrypt = require('bcrypt-nodejs');
 
 const url = 'mongodb://localhost/agenda';
 
@@ -18,7 +18,9 @@ MongoClient.connect(url, (err, db) => {
             console.log('Usuario registrado anteriormente');
         }
         else {
-            Usuarios.insertOne({nomusu: 'admin', clave: passwordHash.generate('clave')}, (err, doc) => {
+            let salt = bcrypt.genSaltSync();
+            let password_hash = bcrypt.hashSync('clave', salt);
+            Usuarios.insertOne({nomusu: 'admin', clave: password_hash}, (err, doc) => {
                 if (err) throw err;
                 console.log('usuario registrado correctamente...', JSON.stringify(doc));
             });
