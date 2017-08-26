@@ -13,7 +13,6 @@ module.exports = (app, db) => {
     app.post('/login', (req, res) => {
 
         Usuario.verificaUsuario(req.body, (error, respuesta) => {
-            console.log('respuesta', respuesta);
             if (error)
                 throw error;
             else if(respuesta) 
