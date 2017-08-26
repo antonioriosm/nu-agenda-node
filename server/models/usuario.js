@@ -10,13 +10,10 @@ module.exports = function(db) {
         let where = {nomusu: reg.user};
 
         Usuarios.findOne(where, (err, doc) => {
-            console.error('error', err);
-            console.log('doc', doc);
-
             if (err) 
                 callback(err);
             else if (bcrypt.compareSync(reg.pass, doc.clave))
-                callback(null, true);
+                callback(null, doc);
             else
                 callback(null, false);
         });

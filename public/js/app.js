@@ -1,4 +1,4 @@
-//'use strict';
+'use strict';
 
 class EventManager {
     constructor() {
@@ -11,7 +11,10 @@ class EventManager {
     obtenerDataInicial() {
         let url = this.urlBase + "/all";
         $.get(url, (response) => {
-            this.inicializarCalendario(response);
+            if (typeof(response) == "string")
+                window.location.href = '/';
+            else
+                this.inicializarCalendario(response);
         });
     }
 
@@ -25,8 +28,7 @@ class EventManager {
     guardarEvento() {
         $('.addButton').on('click', (ev) => {
             ev.preventDefault();
-            let nombre = $('#titulo').val(),
-                start = $('#start_date').val(),
+            let start = $('#start_date').val(),
                 title = $('#titulo').val(),
                 end = '',
                 start_hour = '',
@@ -36,8 +38,10 @@ class EventManager {
                 end = $('#end_date').val();
                 start_hour = $('#start_hour').val();
                 end_hour = $('#end_hour').val();
-                start = start + 'T' + start_hour;
-                end = end + 'T' + end_hour;
+                if (start_hour !== "") 
+                    start = start + 'T' + start_hour;
+                if (end_hour !== "")
+                    end = end + 'T' + end_hour  ;
             }
             let url = this.urlBase + "/new";
             if (title != "" && start != "") {
@@ -47,7 +51,8 @@ class EventManager {
                     end: end
                 };
                 $.post(url, ev, (response) => {
-                    alert(response);
+                    alert(parseInt(response.total) > 0 ? "Registro grabado correctamente...": "Error al grabar");
+                    this.inicializarFormulario();
                 });
                 $('.calendario').fullCalendar('renderEvent', ev);
             } else {
@@ -57,7 +62,7 @@ class EventManager {
     }
 
     inicializarFormulario() {
-        $('#start_date, #titulo, #end_date').val('');
+        $('#start_date, #titulo, #end_date, #start_hour, #end_hour').val('');
         $('#start_date, #end_date').datepicker({
             dateFormat: "yy-mm-dd"
         });
@@ -88,7 +93,7 @@ class EventManager {
                 center: 'title',
                 right: 'month,agendaWeek,basicDay'
             },
-            defaultDate: '2016-11-01',
+            defaultDate: '2017-08-01',
             navLinks: true,
             editable: true,
             eventLimit: true,
@@ -98,7 +103,7 @@ class EventManager {
             eventDrop: (event) => {
                 this.actualizarEvento(event);
             },
-            //events: eventos,
+            events: eventos,
             eventDragStart: (event, jsEvent) => {
                 $('.delete').find('img').attr('src', "img/trash-open.png");
                 $('.delete').css('background-color', '#a70f19');
