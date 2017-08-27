@@ -48,12 +48,18 @@ module.exports = (app, db) => {
         req.body.nomusu = ObjectId(app.locals.id);
         if (req.body.end == "") delete req.body.end;
 
-        console.log(req.body);
         Evento.agregarEvento(req.body, (error, respuesta) => {
             if (error)
                 throw error;
             else
-                res.json({total: respuesta});
+                res.json(respuesta);
+        });
+    });
+
+    app.post('/events/delete/:id', (req, res) => {
+        console.log('body', req.body);
+        Evento.eliminarEvento(ObjectId(req.body.id), (error, respuesta) => {
+
         });
     });
 };

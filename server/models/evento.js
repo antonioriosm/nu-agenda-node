@@ -6,8 +6,6 @@ module.exports = function(db) {
 
     this.recibirEventos = (id, callback) => {
 
-        console.log(id);
-
         Eventos.find({nomusu: id}).toArray((err, docs) => {
             if (err) 
                 callback(err);
@@ -23,7 +21,17 @@ module.exports = function(db) {
             if (err)
                 callback(err);
             else
-                callback(null, doc.insertedCount);
+                callback(null, {id: doc.insertedIds[0], total: doc.insertedCount});
+        });
+    };
+
+    this.eliminarEvento = (id, callback) => {
+        Eventos.remove({_id: id}, (err, doc) => {
+            console.log('doc=>', doc.result);
+            if (err)
+                callback(err);
+            else
+                callback(null, doc.result);
         });
     };
 };

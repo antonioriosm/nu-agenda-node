@@ -11,6 +11,7 @@ class EventManager {
     obtenerDataInicial() {
         let url = this.urlBase + "/all";
         $.get(url, (response) => {
+            console.log('response', response);
             if (typeof(response) == "string")
                 window.location.href = '/';
             else
@@ -19,9 +20,9 @@ class EventManager {
     }
 
     eliminarEvento(evento) {
-        let eventId = evento.id;
+        let eventId = evento._id;
         $.post('/events/delete/' + eventId, { id: eventId }, (response) => {
-            alert(response);
+            alert(parseInt(response.n) > 0 ? "Evento borrado...": "Error al grabar");
         });
     }
 
@@ -51,10 +52,13 @@ class EventManager {
                     end: end
                 };
                 $.post(url, ev, (response) => {
-                    alert(parseInt(response.total) > 0 ? "Registro grabado correctamente...": "Error al grabar");
+                    console.log(response);
                     this.inicializarFormulario();
+                    ev._id = response.id;
+                    console.log('ev', ev);
+                    $('.calendario').fullCalendar('renderEvent', ev);
+                    alert(parseInt(response.total) > 0 ? "Registro grabado correctamente...": "Error al grabar");
                 });
-                $('.calendario').fullCalendar('renderEvent', ev);
             } else {
                 alert("Complete los campos obligatorios para el evento");
             }
@@ -109,6 +113,8 @@ class EventManager {
                 $('.delete').css('background-color', '#a70f19');
             },
             eventDragStop: (event, jsEvent) => {
+                console.log(event);
+                $('.delete').find('img').attr('src', "img/delete.png");
                 var trashEl = $('.delete');
                 var ofs = trashEl.offset();
                 var x1 = ofs.left;
@@ -118,7 +124,7 @@ class EventManager {
                 if (jsEvent.pageX >= x1 && jsEvent.pageX <= x2 &&
                     jsEvent.pageY >= y1 && jsEvent.pageY <= y2) {
                     this.eliminarEvento(event);
-                    $('.calendario').fullCalendar('removeEvents', event.id);
+                    $('.calendario').fullCalendar('removeEvents', event._id);
                 }
             }
         });
