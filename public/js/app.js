@@ -11,11 +11,16 @@ class EventManager {
     obtenerDataInicial() {
         let url = this.urlBase + "/all";
         $.get(url, (response) => {
-            console.log('response', response);
             if (typeof(response) == "string")
                 window.location.href = '/';
             else
                 this.inicializarCalendario(response);
+        });
+    }
+
+    actualizarEvento(evento) {
+        $.post('/events/update/' + evento._id, {ini: evento.start.format(), fin: evento.end.format(), id: evento._id}, (response) => {
+            console.log(response);
         });
     }
 
@@ -52,10 +57,8 @@ class EventManager {
                     end: end
                 };
                 $.post(url, ev, (response) => {
-                    console.log(response);
                     this.inicializarFormulario();
                     ev._id = response.id;
-                    console.log('ev', ev);
                     $('.calendario').fullCalendar('renderEvent', ev);
                     alert(parseInt(response.total) > 0 ? "Registro grabado correctamente...": "Error al grabar");
                 });
@@ -113,7 +116,6 @@ class EventManager {
                 $('.delete').css('background-color', '#a70f19');
             },
             eventDragStop: (event, jsEvent) => {
-                console.log(event);
                 $('.delete').find('img').attr('src', "img/delete.png");
                 var trashEl = $('.delete');
                 var ofs = trashEl.offset();

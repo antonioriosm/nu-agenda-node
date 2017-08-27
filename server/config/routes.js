@@ -21,7 +21,6 @@ module.exports = (app, db) => {
                 throw error;
             else if (respuesta) {
                 app.locals.id = respuesta._id;
-                console.log('id=>', app.locals.id);
                 res.send('Validado');
             }
             else
@@ -30,7 +29,6 @@ module.exports = (app, db) => {
     });
 
     app.get('/events/all', (req, res) => {
-        console.log(typeof app.locals.id);
         if(typeof(app.locals.id) === 'undefined') {
             res.send('0');
         }
@@ -56,10 +54,15 @@ module.exports = (app, db) => {
         });
     });
 
-    app.post('/events/delete/:id', (req, res) => {
-        console.log('body', req.body);
-        Evento.eliminarEvento(ObjectId(req.body.id), (error, respuesta) => {
+    app.post('/events/update/:id', (req, res) => {
+        Evento.actualizarEvento(ObjectId(req.body.id), req.body, (error, respuesta) => {
+            console.log('update', respuesta);
+        });
+    });
 
+    app.post('/events/delete/:id', (req, res) => {
+        Evento.eliminarEvento(ObjectId(req.body.id), (error, respuesta) => {
+            console.log('delete', respuesta);
         });
     });
 };
